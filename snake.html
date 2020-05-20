@@ -1,0 +1,256 @@
+<html lang="en">
+<head>
+  <title>Classic Snake game</title>
+ <link rel = "icon" href = "title.jpg" type = "image/x-icon"> 
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Gatsby 2.20.14">
+<meta name="robots" content="noindex, nofollow">
+
+
+<title>Play Snake Game</title>
+<style >
+body {
+    background: #0a192f;}
+
+canvas {
+    background:yellow;
+    border: 8px outset #E74C3C  ;
+    width:550; 
+    height:350;
+    
+
+    }  
+
+.footer {
+  background-color:#E74C3C; ;
+  padding: 30px;
+  text-align: center;
+  }
+.header {
+  background-color:#E74C3C; ;
+  padding: 30px;
+  height: 10%;
+ }
+
+.v2 {
+  border-left: 10px solid #0a192f;
+  height: 22%;
+  position:absolute;
+  left: 7%;
+  
+}
+.v3 {
+  border-left: 5px solid #0a192f;
+  height: 22%;
+  position:absolute;
+  left: 7.9%;
+ 
+}
+
+</style>
+<script type="text/javascript">
+function play_game()
+{
+var level = 160; // Game level, by decreasing will speed up
+var rect_w = 45; // Width
+var rect_h = 30; // Height
+var inc_score = 50; // Score
+var snake_color = " #0a192f"; // Snake Color
+var ctx; // Canvas attributes
+var tn = []; // temp directions storage
+var x_dir = [-1, 0, 1, 0]; // position adjusments
+var y_dir = [0, -1, 0, 1]; // position adjusments
+var queue = [];
+var frog = 3; // defalut food
+var map = [];
+var MR = Math.random;
+var X = 5 + (MR() * (rect_w - 10))|0; // Calculate positions
+var Y = 5 + (MR() * (rect_h - 10))|0; // Calculate positions
+var direction = MR() * 3 | 0;
+var interval = 0;
+var score = 0;
+var sum = 0, easy = 0;
+var i, dir;
+// getting play area 
+var c = document.getElementById('playArea');
+ctx = c.getContext('2d');
+// Map positions
+for (i = 0; i < rect_w; i++)
+{
+map[i] = [];
+}
+// random placement of snake food
+function rand_frog()
+{
+var x, y;
+do
+{
+x = MR() * rect_w|0;
+y = MR() * rect_h|0;
+}
+while (map[x][y]);
+map[x][y] = 1;
+ctx.fillStyle = snake_color;
+ctx.strokeRect(x * 10+1, y * 10+1, 8, 8);
+}
+// Default somewhere placement
+rand_frog();
+function set_game_speed()
+{
+if (easy)
+{
+X = (X+rect_w)%rect_w;
+Y = (Y+rect_h)%rect_h;
+}
+--inc_score;
+if (tn.length)
+{
+dir = tn.pop();
+if ((dir % 2) !== (direction % 2))
+{
+direction = dir;
+}
+}
+if ((easy || (0 <= X && 0 <= Y && X < rect_w && Y < rect_h)) && 2 !== map[X][Y])
+{
+if (1 === map[X][Y])
+{
+score+= Math.max(5, inc_score);
+inc_score = 50;
+rand_frog();
+frog++;
+}
+//ctx.fillStyle("#ffffff");
+ctx.fillRect(X * 10, Y * 10, 9, 9);
+map[X][Y] = 2;
+queue.unshift([X, Y]);
+X+= x_dir[direction];
+Y+= y_dir[direction];
+if (frog < queue.length)
+{
+dir = queue.pop()
+map[dir[0]][dir[1]] = 0;
+ctx.clearRect(dir[0] * 10, dir[1] * 10, 10, 10);
+}
+}
+else if (!tn.length)
+{
+var msg_score = document.getElementById("msg");
+msg_score.innerHTML = "Thank you for playing game.<br />Hope you like it <br/><b>Your Score : "+score+"</b><br><input type='button' value='Play Again' onclick='window.location.reload();' />";
+document.getElementById("playArea").style.display = 'block';
+window.clearInterval(interval);
+}
+}
+interval = window.setInterval(set_game_speed, level);
+document.onkeydown = function(e) {
+var code = e.keyCode - 37;
+if (0 <= code && code < 4 && code !== tn[0])
+{
+tn.unshift(code);
+}
+else if (-5 == code)
+{
+if (interval)
+{
+window.clearInterval(interval);
+interval = 0;
+}
+else
+{
+interval = window.setInterval(set_game_speed, 60);
+}
+}
+else
+{
+dir = sum + code;
+if (dir == 44||dir==94||dir==126||dir==171) {
+sum+= code
+} else if (dir === 218) easy = 1;
+}
+}
+}
+</script>
+</head>
+<body onload="play_game()">
+  <div class="v2"></div>
+<div class="v3"></div>
+<div class="header">
+<br>
+<center>
+<table  style="width: 80%;  ">
+  <tr>
+  	<td>
+  		<p align="left">
+  			<a href="index.html"style="text-decoration: none"> 
+  			<font size="5" face="Calibri" color="#0a192f"><b>TUSHAR KUMAR</b></font>
+  		</a>
+  	</p><td>
+    <td>
+    <p align="right">
+    <a href="hello world.html"style="text-decoration: none"><font color="#0a192f" size="5" face="Calibri">Post</font></a>
+    &ensp;<a href="about.html"style="text-decoration: none"><font color="#0a192f" size="5" face="Calibri">About Me</font></a>
+  </p>
+ </td>
+</tr>
+
+</table>
+</center>
+</div>
+<br>
+
+<p style="color: #FFCF70;  font-size:70px; font-family: Segoe UI; text-align: center; margin: 0; padding-bottom: 25px"><b>Classic Snake Game</b></p>
+<center>
+	<font size="6" face="Calibri"  color=" #E74C3C ">
+	<div id="msg" ></div></font>
+	<br>
+    <canvas id="playArea" width="450" height="300"><font size="5" font="Calibri" color="#E74C3C">Sorry your browser does not support HTML5  </font></canvas>
+
+</center>
+
+
+
+
+<center>
+<p> <font face="Calibri" color="#FFCF70" >THANK YOU FOR PLAYING GAME<br>HOPE YOU LIKE IT</font><br>
+<br>
+<table align="center"  >
+<tr><td>
+<!-- AddToAny BEGIN -->
+<div class="a2a_kit a2a_kit_size_32 a2a_default_style" data-a2a-url="file:///C:/Users/TUSHAR%20KUMAR/OneDrive/Desktop/hello%20world.html">
+<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+<a class="a2a_button_whatsapp"></a>
+<a class="a2a_button_facebook"></a>
+<a class="a2a_button_twitter"></a>
+<a class="a2a_button_email"></a>
+<a class="a2a_button_copy_link"></a>
+</div>
+<script>
+var a2a_config = a2a_config || {};
+a2a_config.num_services = 4;
+</script>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
+<!-- AddToAny END -->
+</td></tr>
+</table></p>
+</center><br><br>
+
+
+<div class="v2"></div>
+<div class="v3"></div>
+<div class="footer">
+<p>
+<a href="https://github.com/tushar-013"><img src="github.png" height="35" width="35"></a>
+<a href="https://www.hackerrank.com/tushar131"><img src="hackerrank.png" height="35" width="35" ></a>
+<a href="https://www.instagram.com/_tushar.13_/"><img src="instagram.png" height="35" width="35" ></a>
+<a href="https://www.linkedin.com/in/tushar-kumar-972761191/"><img src="linkedin.png"height="35" width="35"></a><br>
+
+<b><font face="Calibri" size="4.5" color="#17202A">© 2020 · TUSHAR KUMAR</font></b><br>
+</p>
+
+
+</div>
+
+</body>
+</html>
